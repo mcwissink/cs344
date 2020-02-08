@@ -1,0 +1,13 @@
+a.
+b.
+  i. the GPS problem solver is implemented as a class
+  ii. they objects are all lists of objects or strings
+  iii. the mechanism is recursive since achieve_all calls achieve, achieve calls apply_operators, and then apply_operators calls achieve_all
+c.
+d.
+  i. the hungry monkey puzzle
+  ii. each actions specifies the action, the preconditions, the new state, the old state
+  iii. the GPS recursively searches for a solution by applying actions that satisfy the current precondition of current action or goal. This recursion eventually unwinds once an actionable action is considered
+  iv. the code isn't necessarily intelligent; rather, the code makes use of an exhaustively predefined problem that essentially has the solution built into the definition of the problem. By definition, the GPS isn't a rational agent since it fails when there is any level of uncertainty (an action is not defined for a precondition). It's possible that even when a solution exists, the GPS could irrationally use an inefficient path if there are multiple paths to the solution.
+  v. Yes, the monkey would have to intelligently define the preconditions and possible actions by exploring the environment.
+  
