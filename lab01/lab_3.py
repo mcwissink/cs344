@@ -1,9 +1,9 @@
 
 """
-The One Way Door Problem.
+The Plane and Parachute Problem.
 
-In order to achieve the goal, the agent has to be outside the one way door with the apple.
-The agent cannot re-enter the room after leaving. Since the GPS evaluates the goals in the
+In order to achieve the goal, the agent has to jump out of the plane after putting on a parachute.
+The agent cannot re-enter the plane after leaving. Since the GPS evaluates the goals in the
 order given, it can easily get stuck in a state without irreversible operations.
 
 @author: Mark Wissink 
@@ -17,27 +17,27 @@ logging.basicConfig(level=logging.DEBUG)
 # Formulate the problem states and actions.
 problem = {
 
-    'initial': ['at door', 'in room'],
-    'goal': ['out of room', 'has apple'],
-    'goal_reordered': ['has apple', 'out of room'],
+    'initial': ['at door', 'in plane'],
+    'goal': ['out of plane', 'has parachute'],
+    'goal_reordered': ['has parachute', 'out of plane'],
     'actions': [
         {
-            'action': 'walk left and grap apple',
-            'preconds': ['in room', 'at door'],
-            'add': ['left of door', 'has apple'],
+            'action': 'walk left and grab parachute',
+            'preconds': ['in plane', 'at door'],
+            'add': ['left of door', 'has parachute'],
             'delete': ['at door' ]
         },
         {
             'action': 'walk right',
-            'preconds': ['in room', 'left of door'],
+            'preconds': ['in plane', 'left of door'],
             'add': ['at door'],
             'delete': ['left of door']
         },
         {
-            'action': 'leave room',
-            'preconds': ['at door', 'in room'],
-            'add': ['out of room'],
-            'delete': ['at door', 'in room']
+            'action': 'leave plane',
+            'preconds': ['at door', 'in plane'],
+            'add': ['out of plane'],
+            'delete': ['at door', 'in plane']
         },
     ]
 }
@@ -45,8 +45,8 @@ problem = {
 if __name__ == '__main__':
 
     # Failed example of the plan.
-    # The GPS first tries to achieve 'out of room'
-    # but then it can't renter and grab the apple
+    # The GPS first tries to achieve 'out of plane'
+    # but then it can't renter and grab the parachute
     #
     # A human could easily see how to solve the problem however
     actionSequenceFail = gps(
@@ -63,7 +63,7 @@ if __name__ == '__main__':
         print('plan failure...')
 
     # The succesful implementation where the goals are reordered
-    # The apple is grabbed first before leaving
+    # The parachute is grabbed first before leaving
     actionSequence = gps(
         problem['initial'],
         problem['goal_reordered'],
