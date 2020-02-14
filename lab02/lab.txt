@@ -1,0 +1,16 @@
+Exercise 2.1
+a. Which of the local search algorithms solves the problem? How well does each algorithm do?
+   Both of the local search algorithm solves the problem, and they both achieve the max valuable possible
+
+b. Which algorithm works more quickly
+   The simulated annealing works slower since it has to wait for the temperature of the function to decrease, even if it has found the best solution. For hill climbing, once it reaches the local maximum, it stops.
+
+c. Does the starting value for x make any difference? Why or why not?
+   For the given problem, the starting value of x shouldn't make a difference since there is only one maximum, which is the global maximum. In most problems where hill climbing would fail, it succeeds. For simulated annealing, it doesn't really matter, but it does benefit from the uni-modal aspect.
+
+d. What affect does changing the delta step value make on each algorithm? Why?
+   When the delta step value is greater than the maximum, then the algorithms get stuck at their starting point since they can't move. When the delta is significantly small, the simulated annealing can run out of time when looking for the maximum. As the temperature is getting low, it can be too late to move towards the answer. 
+
+e. What is the purpose of the exp_schedule() method in the simluated annealing function call?
+   the exp_schedule returns the value for temperature. When the time is small, the value returned by exp_schedule will be close to the starting value, but as time descreases, the returned temperature should be exponentially smaller
+   
