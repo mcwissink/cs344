@@ -1,6 +1,6 @@
 Exercise 2.1
 a. Which of the local search algorithms solves the problem? How well does each algorithm do?
-   Both of the local search algorithm solves the problem, and they both achieve the max valuable possible
+   Both of the local search algorithm solves the problem, and they both achieve the max valuable possible.
 
 b. Which algorithm works more quickly
    The simulated annealing works slower since it has to wait for the temperature of the function to decrease, even if it has found the best solution. For hill climbing, once it reaches the local maximum, it stops.
@@ -9,8 +9,40 @@ c. Does the starting value for x make any difference? Why or why not?
    For the given problem, the starting value of x shouldn't make a difference since there is only one maximum, which is the global maximum. In most problems where hill climbing would fail, it succeeds. For simulated annealing, it doesn't really matter, but it does benefit from the uni-modal aspect.
 
 d. What affect does changing the delta step value make on each algorithm? Why?
-   When the delta step value is greater than the maximum, then the algorithms get stuck at their starting point since they can't move. When the delta is significantly small, the simulated annealing can run out of time when looking for the maximum. As the temperature is getting low, it can be too late to move towards the answer. 
+   When the delta step value is greater than the maximum, then the algorithms get stuck at their starting point since they can't move. When the delta is significantly small, the simulated annealing can run out of time when looking for the maximum. As the temperature is getting low, it can be too late to move towards the answer. When the step size is greater than one, it's possible that both algorithms won't be able to reach the maximum if half the problem size isn't divisible by the step size.
 
-e. What is the purpose of the exp_schedule() method in the simluated annealing function call?
-   the exp_schedule returns the value for temperature. When the time is small, the value returned by exp_schedule will be close to the starting value, but as time descreases, the returned temperature should be exponentially smaller
+e. What is the purpose of the exp_schedule() method in the simulated annealing function call?
+   the exp_schedule returns the value for temperature. When the time is small, the value returned by exp_schedule will be close to the starting value, but as time decreases, the returned temperature should be exponentially smaller.
    
+Exercise 2.2
+a. How do each of the algorithms do on this problem space? Why?
+   Simulated annealing can end up in many different x values, usually to the right of the initial value, since it can randomly jump over to another local maximum value that has a larger maximum. Both will end up at a local maximum, but hill climb will always end up at the local maximum it starts out closet to, and simulated annealing will end up at the furthest x value from 0 it could reach.
+
+b. Does the starting value make any difference here?
+   The starting value determines which local maximum the hill climb will go to, and it can limit the local maximums that simulated annealing can reach given the step size.
+
+c. Does modifying the step size affect the operation of the two algorithms? Why or why not?
+   A larger step size will always be better in this problem since hill climbing and simulated annealing would be able to get out of the first local maximum, otherwise, hill climbing might get stuck, but simulated annealing may break out.x
+
+d. What are the maximum and minimum possible values here, and how do the two algorithms score with respect to them?
+   the minimum value possible is 0, the minimum local maximum is ~2. The maximum is infinitely large since the peaks just keep growing. hill climbing may on reach the minimum local maximum, and simulated annealing may break out of its initial value range and achieve larger local maximums. 
+
+Exercise 2.3
+a. How does each algorithm do with these restarts? Why?
+   Both algorithms should benefit from the random restarts. With hill climbing, the resulting value from multiple runs is almost the same, which means the largest local maximum within the range of the inital values is being found each time. With annealing, the maximum value found can vary is little bit more because of the randomness.
+   
+b. What are the average values of the runs for each of the algorithms?
+   The average of the runs for each algorithm is about half of the max value reached. This makes sense given the stochastic nature since you would expect an almost even distribution of local maximums to be found over the number of restarts.
+
+c. If one of the algorithms does better, explain why; if not, explain why not.
+   Both algorithms benefit from the random restarts since you are doing more iterations, but hill climbing benefits more. The goal of simulated annealing is to do sudo random restarts, so they are built into the algorithm. But hill-climbing gets stuck at the local maximum is starts next to, so the random restarts allows hill-climbing to explore more space.
+
+Exercise 2.4
+a. For which algorithm does beam search make the most sense?
+   beam search makes the most sense on simulated annealing. With hill-climbing, the algorithm will still only go to the nearest local maximum since the only accepted states will be ones that are better. With simulated annealing, some of the k states may be worse, but might lead to a better solution.
+
+b. How many solutions could you maintain with reasonable space and time constraints?
+   It's hard to say since it is sort of hardware dependent, but the amount of memory will never grow outside of k. So k could be the number of states that fit in memory.
+
+c. How would you modify the code to implement beam search? How is it different from random restarts, if at all?
+   Run the simulated annealing search k times, starting from a single state. Select the best state from the pool of k. Use that chosen state as the initial state in the next iteration of simulated annealing searching. It is a little different from random restarts since you are passing information onto the next iteration which directs the solution.
