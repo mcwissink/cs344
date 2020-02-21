@@ -17,9 +17,12 @@ a. How large can n get for each of the algorithms? Why?
    - Backtracking solves the problem in reasonable time up until n = 20 (without mrv and forward checking). As the board gets larger, the number of unassigned variables and domain size becomes so large that it spends a long time search
    - Min-Conflicts seems to be the perfect algorithm for the problem. It starts with a random initial state, and it reduces the number of conflicts between queens. In the book, it describes that the queens problem is essentially constant time (50 steps) for the min-conflict algorithm. This is probably because there are multiple maximums that result in a solution.
 b. What backtracking settings work the best? Why?
-   The backtracking with MRV and forward checking is slightly more performant. MRV is really the only one that makes a difference since it spends time moving queens with less options,
+   The backtracking with MRV and forward checking is slightly more performant. MRV is really the only one that makes a difference since it makes the algorithm spend time moving queens with less options. As seen with the AC3 solver, making the problem arc-consistent is extremely valuable since variables are constantly changing, so forward checking doesn't make a significant difference.
 c. How many steps does Min-Conflicts require to do its work? Why?
+   According to the book, Min-Conflicts should only require around 50 steps. The n queens problem has many solutions, especially on larger boards, so there are many maximums. Since Min-Conflicts starts with a random state, it's likely it will start next to a maximum which will provide a solution.
 
 Exercise 3.3
 a. Compare and contrast the specifications for CSP (i.e., csp.CSP) and traditional problems (i.e., search.Problem). Be sure to consider the nature of states, domains, actions, results and goal tests. 
+   CSP is a subclass of Problem, it is simply a problem, but it includes constraints. The inherited actions, states, and goals are the same between the two classes of problems, but CSP adds an extra layer of variables, domains, and constraints which aids in the process of the search.
 b. Compare and contrast the nature of the heuristics deployed in traditional and constraint-based problem solving. 
+   The heuristics for traditional problem solving involve the path cost, moving from one state to another. Optimizing for the optimal path is the important aspect of these type of problems. On the other hand, CSPs heuristic focuses on the satifying of constraints, it works towards reducing the violations of those constraints.
