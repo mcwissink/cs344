@@ -1,10 +1,25 @@
 Exercise 3.1
 a. Which algorithms work (in a timely manner) and which don’t? Explain your results in terms of the capabilities (and implementations) of the algorithms and nature of the problems.
-   - Depth first graph search fails to find the solution to the easiest sudoku puzzle in reasonable time. The number of nodes that DFS has to search is exponentially large given the problem, and it would take a long time for it to come to a solution, but it will eventually get there.
+   - Depth first graph search fails to find the solution to the easiest sudoku puzzle in reasonable time. The number of nodes that DFS has to search is exponentially large given the problem, and it would take a long time for it to come to a solution. But since there is no backtracking, the solution will probably be wrong.
    - AC3 succeeds in the easy puzzle case, out performing DFS. But it fails on the more difficult puzzles; it does terminate, but in failure. AC3 fails to find a solution to these more complex puzzles since it doesn't do any type of guessing/backtracking. It simply reduces the search space using arc-consistency, but it won't find a solution if the solution isn't the result of the domain simplification.
    - Backtracking performs similarly to AC3, but rather than terminating in a failed state on the more complex problems, it continues searching for an unreasonable amount of time. Since it is using simple strategies for select_unassigned_variable and inference methods, it greatly increases the amount of time spent searching (a factor of 1,000 according to the book). 
+   - Min-Conflicts fails to find a solution past the solved on in reasonable time. Since it starts with a random initial state, it may be unsolvable if it gets stuck at a local maximum.
 b. What effect does configuring the settings for backtracking have on the results? Try the following
    i. Set the variable/value ordering (i.e., the select_unassigned_variable parameter) to first-unassigned-variable (the default) or minimum-remaining-values (i.e., mrv). 
    ii. Set the inference (i.e., the inference parameter) to forward-checking (i.e., forward_checking).
    Which, if any, of these settings should work best for sudoku? What combination of settings actually works the best?
-   The combination of MRV (minimum-remaining-value) and forward-checking work together to efficiently solve the puzzle. MRV searches in the next logical cell (the one with the most constraints), and forward-checking makes sure the choice is arc-consistent before exploring the option. Another way to solve the problem in a similar fashion is to run the puzzle through AC3 and then pass it onto the backtracking with only MRV. AC3 makes the puzzle arc-consistent, so foward checking is not needed when running backtracking.
+   The combination of MRV (minimum-remaining-value) and forward-checking work together to efficiently solve the puzzle. MRV searches in the next logical cell (the one with the most constraints), and forward-checking makes sure the choice is arc-consistent before exploring the option. Another way to solve the problem in a similar fashion is to run the puzzle through AC3 and then pass it onto the backtracking with only MRV. AC3 makes the puzzle arc-consistent, so forward checking is not needed when running backtracking.
+
+Exercse 3.2
+a. How large can n get for each of the algorithms? Why?
+   - Depth first graph search fails to find a solution since it doesn't do any type of backtracking, once. Similar to the sudoku problem, there are so many nodes that it has to explore with larger problems that it also takes a long time.
+   - AC3 runs into similar problems that it did with the sudoku puzzle. It makes the puzzle arc-consistent, but it doesn't arrive at a solution by doing so.
+   - Backtracking solves the problem in reasonable time up until n = 20 (without mrv and forward checking). As the board gets larger, the number of unassigned variables and domain size becomes so large that it spends a long time search
+   - Min-Conflicts seems to be the perfect algorithm for the problem. It starts with a random initial state, and it reduces the number of conflicts between queens. In the book, it describes that the queens problem is essentially constant time (50 steps) for the min-conflict algorithm. This is probably because there are multiple maximums that result in a solution.
+b. What backtracking settings work the best? Why?
+   The backtracking with MRV and forward checking is slightly more performant. MRV is really the only one that makes a difference since it spends time moving queens with less options,
+c. How many steps does Min-Conflicts require to do its work? Why?
+
+Exercise 3.3
+a. Compare and contrast the specifications for CSP (i.e., csp.CSP) and traditional problems (i.e., search.Problem). Be sure to consider the nature of states, domains, actions, results and goal tests. 
+b. Compare and contrast the nature of the heuristics deployed in traditional and constraint-based problem solving. 
