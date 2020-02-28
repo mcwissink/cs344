@@ -1,0 +1,21 @@
+Exercise 4.3
+1. Drug testing
+   1. P(user) = 0.089
+   2. P(test | user) = 0.99
+   3. P(~test | user) = 0.01
+   4. P(test | ~user) = 0.02
+   5. P(user | test) = P(test | user) * P(user) / P(test)
+      P(test) = P(test | user) * P(user) + P(test | ~user) * P(~user)
+      	      = 0.99 * 0.089 + 0.02 * 0.911 = 0.10633
+      P(user | test) = 0.99 * 0.089 * 0.10633 = 0.82864
+
+      ~82% of people who test are drug users
+      ~18% of people who test true aren't drug users
+
+2. Breast Cancer
+   1. P(cancer) = 0.01
+   2. P(positive | cancer) = 0.8
+   3. P(positive | ~cancer) = 0.096
+   4. P(cancer | positive) = P(positive | cancer) * P(cancer) / P(positive) 
+      P(positive) = 0.8 * 0.01 + 0.096 * 0.99 = 0.10304
+      P(cancer | positive) = 0.8 * 0.01 / 0.10304 = 0.07764
