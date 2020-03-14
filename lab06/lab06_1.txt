@@ -1,0 +1,18 @@
+Exercise 6.1
+
+Gain(Hungry) = Entropy(WillWait) - Remainder(Hungry)
+
+Entropy(WillWait) = -(p(yes)log2(yes) + p(no)log2(no))
+		  = -(6/12)log2(6/12) - (6/12)log(6/12)
+		  = 1
+
+Remainder(Hungry) = (5 + 2)/(6 + 6) * Entropy(5/7, 2/7) + (1 + 4)/(6 + 6) * Entropy(1/5, 4/5)
+		  = 7/12 * -((5/7)log2(5/7) + (2/7)log2(2/7)) + 5/12 * -((1/5)log2(1/5) + (4/5)log2(4/5))
+		  = 0.804
+		  
+
+Gain(Hungry) = Entropy(WillWait) - Remainder(Hungry)
+	     = 1 - 0.804
+	     = 0.196
+
+According to the values calculated for Patrons and Type, Hungry has more information gain than Type (0.196 > 0.0) but has less gain than Patrons (0.196 < 0.54).
