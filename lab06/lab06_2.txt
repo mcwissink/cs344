@@ -1,0 +1,17 @@
+Exercise 6.2
+a. Framing
+   1. Identify whether an email in Gmail is "important"
+   2. My ideal outcome is to only label emails as "important" if they require my immediate attention
+   3. a. The success metric
+      b. The key results is correctly predicting 95% or more of important emails
+      c. The ML model is a failure if the number of predicted important emails is no better than the current heuristic or model
+   4. The output from the ML model will be the whether the email is important or not. 0 = the email is unimportant, 1 = the email is important
+   5. The output will be made when a new email is received. The outcome will be used for labeling the email as important
+   6. If we didn't use ML, we would use text analysis or a white-list of important senders
+   
+b. Formulating
+   7. Binary classification
+   8. rows = emails
+      output = 0 or 1 for important
+   9. inputs = sender, metadata, 1D list of subject tokens, 1D list of email tokens
+   10. sender and 1D list of subject tokens would produce a reasonable outcome
