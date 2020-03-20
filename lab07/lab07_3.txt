@@ -1,0 +1,40 @@
+a.
+Task 1
+
+california_housing_dataframe["rooms_per_person"] = california_housing_dataframe["total_rooms"] / california_housing_dataframe["population"]
+
+calibration_data = train_model(
+    learning_rate=0.05,
+    steps=500,
+    batch_size=10,
+    input_feature="rooms_per_person"
+)
+RMSE = 131.78
+
+Task 2
+
+plt.figure(figsize=(15, 6))
+plt.subplot(1, 2, 1)
+plt.title("Rooms per Person")
+plt.scatter(calibration_data["predictions"], calibration_data["targets"])
+
+Task 3
+
+clipped_rooms_per_person = california_housing_dataframe["rooms_per_person"].apply(lambda x: min(x, 4))
+california_housing_dataframe["rooms_per_person"] = clipped_rooms_per_person
+clipped_rooms_per_person.hist()
+
+calibration_data = train_model(
+    learning_rate=0.05,
+    steps=500,
+    batch_size=5,
+    input_feature="rooms_per_person")
+
+plt.figure(figsize=(15, 6))
+plt.subplot(1, 2, 1)
+plt.title("Rooms per Person")
+plt.scatter(calibration_data["predictions"], calibration_data["targets"])
+
+b. Synthetic features allows the user to define a ratio column that is a useful combination of existing columns in a dataset. It provides a mean of targeting a certain feature of the data set.
+
+c. Outliers are simply a few data points that significantly diverge from the trend of the data. Since the models are typically created to predict the average trend, outliers don't provide any useful information so they are discarded.

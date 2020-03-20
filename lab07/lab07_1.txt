@@ -1,0 +1,18 @@
+a. 
+Exercise 1
+
+import re
+isSaint = cities['City name'].apply(lambda name: re.search("^San .*",name) is not None)
+isArea = cities['Area square miles'].apply(lambda miles: miles > 50)
+cities['Saint & Area'] = isSaint & isArea
+cities
+
+Exercise 2
+
+cities.reindex([2, 0, 1, 3])
+
+The invalid index gets replaced with NaN values for the columns. This allows for easier processing of data since user don't have to worry about missing indexes if there are any.
+
+b. From the exercises, it seems that NumPy is geared towards manipulating series data, while Pandas is good at handling data frames.
+
+c. The data is probably organized in a predefined pattern. This may result in some correlation or bias when training on the set of data.

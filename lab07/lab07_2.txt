@@ -1,0 +1,21 @@
+a. categorical data are discrete, textual values that represent a contextual meaning (cities, color, gender). Numerical data can be discrete or continuous numerical values. Categorical data can be represented as numerical data by assigning each category an integer value.
+
+b.
+Task 1
+train_model(
+    learning_rate=0.00001,
+    steps=1000,
+    batch_size=8
+)
+RMSE = 167.30
+
+Task 2
+train_model(
+    learning_rate=0.00002,
+    steps=1000,
+    batch_size=8,
+    input_feature="population"
+)
+RMSE = 176.03
+
+c. The hyperparameters are learning_rate, steps, and batch_size. There is no real standard for tuning the parameters; rather, it's a matter of intuition and learning as you see the results of an attempted parameterization. Recognizing a good training error is important.
