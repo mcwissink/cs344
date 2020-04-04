@@ -1,0 +1,4 @@
+a. What good did the K-fold validation do in this exercise?
+b. Chollet claims that it would be problematic to use data values with "wildly different ranges." Why is this?
+c. Chollet also claims that smaller datasets "prefer" smaller networks. Do you agree? Explain your answer.
+d. Try networks with one more and one less hidden layer, and wider or narrower layer. Do any of your alternatives do better than the suggested architecture? Why or why not?
