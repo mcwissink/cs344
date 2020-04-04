@@ -1,0 +1,47 @@
+a. What does the Pearson correlation coefficient measure? Identify one example value from the correlation table you compute and explain why it makes sense.
+A Pearson correlation coefficient measures of the linear correlation between two variables. The correlation between latitude and longitude is quite easy to make sense of. California's shape is like a rectangle that is descending downwards, so as the longitude increases, the latitude decreases. This is a purely physical correlation.
+
+b. Submit your solutions to tasks 1-2. Include the features you selected for task 1 and the synthetic features you developed for task 2; include the final RMS errors but not the training output. Did you beat the Google-provided baselines?
+1. Develop a Good Feature Set
+minimal_features = [
+  "median_income",
+  "rooms_per_person",
+]
+train_model(
+  learning_rate=0.05,
+  steps=500,
+  batch_size=5,
+  training_examples=minimal_training_examples,
+  training_targets=training_targets,
+  validation_examples=minimal_validation_examples,
+  validation_targets=validation_targets
+ )
+
+RMS = 84.74
+
+2. Make Better Use of Latitude
+def modify_features(features):
+  city_latitudes = [34, 37] # San Francisco and Los Angeles
+  modified_features = pd.DataFrame()
+  modified_features["median_income"] = features["median_income"]
+  modified_features["distance_to_city"] = features["latitude"].apply(
+      lambda l: min(abs(l - city) for city in city_latitudes)
+  )
+  return modified_features
+
+modified_training_examples = modify_features(training_examples)
+modified_validation_examples = modify_features(validation_examples)
+
+_ = train_model(
+    learning_rate=0.05,
+    steps=500,
+    batch_size=5,
+    training_examples=selected_training_examples,
+    training_targets=training_targets,
+    validation_examples=selected_validation_examples,
+    validation_targets=validation_targets
+)
+
+RMS = 83.58
+
+Both training sets beat the Google-provided baselines

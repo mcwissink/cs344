@@ -1,0 +1,67 @@
+a. Submit solutions to task 1-5.
+1. Examine the data
+Most the data seems fine, but the lack of units on housing_median_age and median_income are things that should probably be modified. There are occasional outliers which can be trimmed out of the data set.
+
+2. Plot Latitude/Longitude vs. Median House Value
+The only frame of reference is to compare the data sets to each other. When this is done, one can see that the latitude and longitude distributions are quite different between the two sets. This may be a result of how the data is sorted or some other feature in the dataset.
+
+3. Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs
+california_housing_dataframe = california_housing_dataframe.reindex(
+  np.random.permutation(california_housing_dataframe.index)
+)
+
+4. Train and Evaluate a Model
+training_input_fn = lambda: my_input_fn(
+  training_examples, 
+  training_targets['median_house_value'],
+  batch_size=batch_size
+)
+predict_training_input_fn = lambda: my_input_fn(
+  training_examples,
+  training_targets['median_house_value'],
+  num_epochs=1,
+  shuffle=False
+)
+predict_validation_input_fn = lambda: my_input_fn(
+  validation_examples, 
+  validation_targets['median_house_value'],
+  num_epochs=1,
+  shuffle=False
+)
+
+training_predictions = linear_regressor.predict(input_fn=predict_training_input_fn)
+training_predictions = np.array([item['predictions'][0] for item in training_predictions])
+validation_predictions = linear_regressor.predict(input_fn=predict_validation_input_fn)
+validation_predictions = np.array([item['predictions'][0] for item in validation_predictions])
+
+linear_regressor = train_model(
+  learning_rate=0.00002,
+  steps=500,
+  batch_size=5,
+  training_examples=training_examples,
+  training_targets=training_targets,
+  validation_examples=validation_examples,
+  validation_targets=validation_targets
+)
+
+5. Evaluate on Test Data
+california_housing_test_data = pd.read_csv("https://download.mlcc.google.com/mledu-datasets/california_housing_test.csv", sep=",")
+
+test_features = preprocess_features(california_housing_test_data)
+test_targets = preprocess_targets(california_housing_test_data)
+
+prediction_input_fn = lambda: my_input_fn(test_features, test_targets, 1, False, 1)
+
+predictions = linear_regressor.predict(prediction_input_fn)
+predictions = np.array([item['predictions'][0] for item in predictions])
+
+mean_squared_error = metrics.mean_squared_error(predictions, test_targets)
+root_mean_squared_error =  math.sqrt(mean_squared_error)
+print("Mean Squared Error (on training data): %0.3f" % mean_squared_error)
+print("Root Mean Squared Error (on training data): %0.3f" % root_mean_squared_error)
+
+RMSE = 163.747
+Since the RMSE of the test data was very close to the RMSE of the training data, we can conclude that our model's performance properly predicts the test data that was absent from the training set. We are able to accurately predict new data with our model
+
+b. Give a one-paragraph summary of what you learned about using training, validation, and testing datasets.
+Most of the time spent debugging is spent on the data rather than the code. Once all the boiler plate code is out of the way, running and training the model is quite trivial with the knowledge of what to tweak and look for. The test and validation techniques further enforced what we learned in the guide prior to the lab, which involved three partitions of the data, training, validation, and testing. So by the end of the whole process, we were quite confident in our model's predictions.
