@@ -2,7 +2,7 @@ a. They recommend FTRL for L1 optimization, but the code specifies the same rate
 The FTRL handles the learning rate independently for each feature.
 
 b. What good does the bucketing/binning do?
-bucketing/binning can reduce the complexity of the input data as well as the results. It can be used to create logical correlations as well.
+bucketing/binning can reduce the complexity of the input data as well as the results. It can be used to create logical correlations as well. It also makes learning much easier for the model.
 
 c. Submit your solutions to task 1-2. Did you find their task 1 bucketing to make sense? Identify one unique feature cross for task 2 and explain how it could be useful.
 1.

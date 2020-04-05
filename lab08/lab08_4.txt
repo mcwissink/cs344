@@ -1,4 +1,10 @@
 a. What good did the K-fold validation do in this exercise?
+K-fold gave a more built a more reliable model with a small amount of data by averaging the score from K models made from K partitions of the data.
+
 b. Chollet claims that it would be problematic to use data values with "wildly different ranges." Why is this?
+It would be easier for a network learning on feature-wise normalized data since it removes the extra complexity that random units would bring. The network no longer has to learn the rules of the metric, and simply focus on the relation/correlation. 
+
 c. Chollet also claims that smaller datasets "prefer" smaller networks. Do you agree? Explain your answer.
+They prefer smaller networks since they fit the model better. With a large network, you can start overfitting as there are many extra parameters that get fine tuned to the training data.
+
 d. Try networks with one more and one less hidden layer, and wider or narrower layer. Do any of your alternatives do better than the suggested architecture? Why or why not?
