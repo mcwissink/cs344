@@ -1,2 +1,6 @@
 a. Try Chollet's "Further experiments". Do any of the alternatives to better than the suggested architecture? Why or why not?
-
+Base accuracy (2 layers, 16 units) = 88.38%
+1. 1 layer, 16 units - accuracy about the same, but goes up to 88.73%
+2. 2 layers, 32 units - accuracy goes up a little to 87.98%
+3. 2 layers, 16 units, mse - accuracy about the same, 88.23%
+4. 2 layers, 16 units, tanh - accuracy goes down to 87.25%
