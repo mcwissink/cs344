@@ -1,0 +1,23 @@
+Exercise 9.1
+a. How effective is the linear regression approach to the problem?
+The linear regression isn't very effective at fitting the model as the resulting RMSE varies extremely. We would normally expect the RMSE of the model to exponentially decrease. 
+
+b. Task 1: Compare and contrast L2 Loss vs LogLoss. 
+L2 is the linear loss function used in linear regression, where LogLoss is the logarithmic loss function used in linear classification. L2 works to fit data to a linear model, making sure weights stay small and near 0, where LogLoss is used for classification, giving a probability of certainty. L2 loss is not designed to optimize for probabilities.
+
+c. Task 2: Explain how effective logistic regression is compared with linear regression.
+When training with the logistic regression model, we see a more consistent decrease in the loss value, and does so at an exponential rate. Both of these features are things that linear regression failed to achieve.
+
+d. Task 3: Here, just report the best values you can achieve for AUC/accuracy and what hyperparameters you used to get them. 
+linear_classifier = train_linear_classifier_model(
+    learning_rate=0.000005,
+    steps=10000,
+    batch_size=200,
+    training_examples=training_examples,
+    training_targets=training_targets,
+    validation_examples=validation_examples,
+    validation_targets=validation_targets)
+
+AUC on the validation set: 0.80
+Accuracy on the validation set: 0.78
+

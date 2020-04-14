@@ -1,0 +1,8 @@
+a. Why are we regularizing with respects to sparsity?
+Since our model has to be small and efficient, we want to eliminate as many weights as possible. When regularizing with respects to sparsity, weights get zeroed out, so there aren't as many in the model.
+b. How does L1 regularization increase sparsity?
+L1 works similarly to L2, keeping the weights close to 0 and penalizing large weights. But instead of pushing values to be close to 0, L1 regularization zeroes them out.
+c. Task 1: Here, just report the best log loss value / model size you can get and get and what gamma value you used to get them.
+Regularization Strength: 0.9
+LogLoss: 0.25
+Model Size: 551
