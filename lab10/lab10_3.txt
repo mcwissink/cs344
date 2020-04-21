@@ -2,7 +2,7 @@ a. Task 1: What does the confusion matrix show for this example?
 It shows which classes were misclassified  as other classes. Represents how easily some numbers can be interpreted as another
 
 b. Task 2: How does the TensorFlow network architecture differ from the Keras example given in class? Report any improvements you can make over the baseline testset accuracy for this task. 
-It seems the TensorFlow architecture treats each pixel as a feature column, while the Keras example did the more sophisticated patching approach, but unless that logic is hidden in the DNNClassifier. Also, the TensorFlow architecture uses a SoftMax activation function instead of the relu used in the Keras example. 
+It seems the TensorFlow architecture used used two hidden layers of 100 units each while the class example used a single layer of 512 units. No real improvement over the initial example
 
 c. Task 3: What differences can you see between the visualizations for 10 steps and 1000 steps? 
 10 steps - all the weights are noisy and fuzzy with no distinguishable patterns

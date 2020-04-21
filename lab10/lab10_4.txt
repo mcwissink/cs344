@@ -1,0 +1,9 @@
+a. Exercise 1.
+   i. What's the size/shape of the cats/dogs dataset?
+   The dataset includes 1500 photos of cats and 1500 of dogs where both hae 1000 of their training set and the other 500 in their validation
+   ii. How does the first CNN compare with the one we did in class.
+   The input to this CNN includes 3 color channels as well as each convolution being followed by a maxpool.
+   iii. Can you see any interesting patterns in the intermediate representations?
+   Some of the convolutions seem to be generating some type of edge detection on the image which is interesting.
+
+b. You can skip Exercises 2 & 3
