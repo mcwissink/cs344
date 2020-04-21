@@ -1,0 +1,35 @@
+a. What does AdaGrad do to boost performance?
+Adagrad modifies the learning rate adaptively for each coefficient in a model. Having multiple learning rates will allow each dimension to descend at the optimal rate.
+
+b. Tasks 1-3: Report your best hyperparameter settings and their resulting performance.
+_ = train_nn_regression_model(
+    my_optimizer=tf.train.GradientDescentOptimizer(learning_rate=0.005),
+    steps=5000,
+    batch_size=70,
+    hidden_units=[10, 10],
+    training_examples=normalized_training_examples,
+    training_targets=training_targets,
+    validation_examples=normalized_validation_examples,
+    validation_targets=validation_targets)
+	
+_ = train_nn_regression_model(
+    my_optimizer=tf.train.AdagradOptimizer(learning_rate=0.4),
+    steps=600,
+    batch_size=100,
+    hidden_units=[10, 10],
+    training_examples=normalized_training_examples,
+    training_targets=training_targets,
+    validation_examples=normalized_validation_examples,
+    validation_targets=validation_targets)
+	
+_ = train_nn_regression_model(
+    my_optimizer=tf.train.AdamOptimizer(learning_rate=0.05),
+    steps=800,
+    batch_size=100,
+    hidden_units=[10, 10],
+    training_examples=normalized_training_examples,
+    training_targets=training_targets,
+    validation_examples=normalized_validation_examples,
+    validation_targets=validation_targets)
+    
+c. Optional Challenge: you can skip this exercise

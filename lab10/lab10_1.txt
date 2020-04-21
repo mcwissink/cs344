@@ -1,0 +1,15 @@
+a. Would you rather use TensorFlow or Keras to build your models?
+Keras makes the models easiest to build and conceptually understand while greatly reducing the boiler place good of TensorFlow. But it does come at a cost since Keras will be harder to program custom functionality. However, I would prefer Keras.
+
+b. Task 1 & 2: Report your best hyper-parameter settings and their resulting performance on the testing dataset.
+dnn_regressor = train_nn_regression_model(
+    learning_rate=0.002,
+    steps=3000,
+    batch_size=150,
+    hidden_units=[10, 10],
+    training_examples=training_examples,
+    training_targets=training_targets,
+    validation_examples=validation_examples,
+    validation_targets=validation_targets)
+
+
