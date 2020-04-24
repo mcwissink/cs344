@@ -1,0 +1,7 @@
+a. Task #1 — What are the biases present in the given dataset?
+One bias is the gender distribution, almost 2/3rds are male. While it would be more representative 50/50 distribution, the data is from 1994 where the given distribution may have been expected.
+b. Task #2 — Assess the potential bias in some other feature besides education level.
+One interesting feature is binning by race and coloring/labeling by gender. This reveals there is roughly a 50/50 split between sampled gender in all other races other than white. The sampled white distribution is almost 2/3rds male
+c. Task #3 — Do as written.
+d. Task #4 — Do you find disparities when you look at race rather than gender? If so, which way to they skew? 
+The precision and recall for White and Asian-Pac-Islander races were better than all the others. Despite having a lot of data, Black race's precision and recall values were 0.64 and 0.47 respectively - quite lower than the White and Asian-Pac-Islander races.
