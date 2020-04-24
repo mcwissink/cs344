@@ -1,0 +1,16 @@
+a. Task 1: Is a linear model ever preferable to a deep NN model?
+When you expect the a relationship to be linear, a linear model will probably give a better fit.
+
+b. Task 2: Does the NN model do better than the linear model?
+Yes, in all areas - accuracy, precision, and recall - the NN outperforms the linear model.
+
+c. Task 3: Do embeddings do much good for sentiment analysis tasks?
+Embeddings is a convenient method for finding relationships and correlations between different words, this makes sentiment analysis easier when compared to other points in the dataset.
+
+d. Tasks 4–5: Name two words that have similar embeddings and explain why that makes sense.
+comedy and action are quite close, both are used to described a movie genre, and action comedy is a popular movie genre. Since these words are closely related in terms of genre and being paired together, they would have similar embeddings.
+
+e. Task 6: Report your best hyper-parameters and their resulting performance.
+my_optimizer = tf.train.AdagradOptimizer(learning_rate=0.3)
+
+f. Optional Discussion: You can skip this section.
