@@ -1,0 +1,18 @@
+Entities
+A, B, C, table
+
+Facts
+1. A is on B
+2. B is on C
+3. The table support C
+4. For any two entities, if the first entity supports the second, then the second is on the first. 
+5. For any two entities, if the first entity is on the second, then the first is “above” the second. 
+6. For any three entities, if the first entity is above the second which is above the third, then the first is above the third. 
+
+Proof
+5(A, B) -> A is above B
+5(B, C) -> B is above C
+4(table, C) -> C is on the table
+5(C, table) -> C is above the table
+6(A, B, C) -> A is above C
+6(A, C, table) -> A is above the table
