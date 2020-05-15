@@ -37,7 +37,7 @@ class Wumpus(gym.Env):
         EXIT = 0
         EXIT_GOLD = 1000
         DEATH = -1000
-        GRAB_GOLD = 100
+        GRAB_GOLD = 50
         
     def __init__(self, width=4, height=4):
         self.w = width
@@ -62,6 +62,7 @@ class Wumpus(gym.Env):
         }
         self.action = 0
         self.reward = 0
+        self.observations = []
         """
         Actions
         0 = forward - if no wall
@@ -93,13 +94,12 @@ class Wumpus(gym.Env):
     
     def step(self, action):
         assert self.action_space.contains(action)
-        self.action = action
         observations = [False] * 6
         done = False
-        reward = -1
+        reward = 0
         # Handle the actions
         if action == self.Actions.FORWARD:
-            position, bump = self._move_forward(self.Board.PLAYER, self.player["position"], self.player["direction"])
+            position, bump = self._move_forward(self.player["position"], self.player["direction"], self.Board.PLAYER)
             observations[3] = bump
             self.player["position"] = position
         elif action == self.Actions.TURNLEFT:
@@ -108,23 +108,32 @@ class Wumpus(gym.Env):
             self.player["direction"] = self._turn_right(self.player["direction"])
         elif action == self.Actions.GRAB:
             if self.Board.GOLD in self.board[self.player["position"]]:
+                print("GRABBED GOLD!")
                 reward += self.Rewards.GRAB_GOLD
                 self.player["gold"] = True
                 self.board[self.player["position"]].remove(self.Board.GOLD)
         elif action == self.Actions.SHOOT:
+            reward -= 1
             pass
         elif action == self.Actions.CLIMB:
             if self.Board.EXIT in self.board[self.player["position"]]:
+                print("EXITED CAVE!")
                 reward += self.Rewards.EXIT_GOLD if self.player["gold"] else self.Rewards.EXIT
                 done = True
-        # Check if the player died
 
+        # Check if the player died
         position = self.board[self.player["position"]]
         if self.Board.PIT in position or self.Board.WUMPUS in position:
+            print("DIED!")
             reward -= 1000
             done = True
         observations = self._get_observations(observations)
+
+        # Record things for rendering
+        self.action = action
         self.reward = reward
+        self.observations = observations
+        
         return np.array(observations), reward, done, {}
             
     def reset(self):
@@ -146,7 +155,8 @@ class Wumpus(gym.Env):
                 out.write("{} ".format(np.sum(list(self.board[i * self.h + j]))))
             out.write("\n")
         out.write("Action: {}, Reward: {}\n".format(self.action, self.reward))
-        for i in range(self.h + 1):
+        print(self.observations)
+        for i in range(self.h + 2):
             sys.stdout.write("\033[F")
 
     def _get_observations(self, observations=[False]*6):
@@ -157,14 +167,15 @@ class Wumpus(gym.Env):
         observations[5] = self.Board.EXIT in position
         return observations
 
-    def _move_forward(self, item, position, direction):
+    def _move_forward(self, position, direction, item=None):
         new_position = position
         distance = self.h if direction % 2 == 0 else 1
         sign = -1 if direction < 2 else 1
         move_to = position + (distance * sign)
         new_position = move_to if self._valid_move(position, move_to) and self.Board.WALL not in self.board[move_to] else position
-        self.board[position].remove(item)
-        self.board[new_position].add(item)
+        if item is not None:
+            self.board[position].discard(item)
+            self.board[new_position].add(item)
         return new_position, position == new_position
 
     def _valid_move(self, old, new):
@@ -184,12 +195,13 @@ class Wumpus(gym.Env):
     def _turn_right(self, direction):
         return (direction - 1) % 4
 
-    def _random_empty_place(self, item):
+    def _random_empty_place(self, item=None):
         rand = random.randrange(len(self.board))
         for i in range(len(self.board)):
             p = self.board[(rand + i) % len(self.board)]
             if not (self.Board.PIT in p or self.Board.EXIT in p or self.Board.WALL in p or self.Board.PLAYER in p or self.Board.WUMPUS in p or self.Board.GOLD in p):
-                p.add(item)
+                if item is not None:
+                    p.add(item)
                 return (rand + i) % len(self.board)
         print("Failed to place item")
         return -1
@@ -198,13 +210,17 @@ class Wumpus(gym.Env):
 
     def _generate(self):
         self.board = [{0} for _ in range(self.h * self.w)]
-        for i in range(len(self.board)):
-            if random.uniform(0, 1) < 0.2:
-                self.board[i].add(self.Board.PIT)
+        # for i in range(len(self.board)):
+        #     if random.uniform(0, 1) < 0.2:
+        #         self.board[i].add(self.Board.PIT)
+        #         for j in range(4):
+        #             self._move_forward(i, j, self.Board.BREEZE)
+                    
         # Place the gold at a random spot
         self._random_empty_place(self.Board.GOLD)
         # Place the start position at 0, 0
-        start_position = self._random_empty_place(self.Board.EXIT)
+        self._random_empty_place(self.Board.EXIT)
+        start_position = self._random_empty_place()
         self.board[start_position].add(self.Board.PLAYER)
         self.player["position"] = start_position
 
