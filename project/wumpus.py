@@ -102,13 +102,15 @@ class Wumpus(gym.Env):
             position, bump = self._move_forward(self.player["position"], self.player["direction"], self.Board.PLAYER)
             observations[3] = bump
             self.player["position"] = position
+            action += 1
         elif action == self.Actions.TURNLEFT:
             self.player["direction"] = self._turn_left(self.player["direction"])
+            action += 1
         elif action == self.Actions.TURNRIGHT:
             self.player["direction"] = self._turn_right(self.player["direction"])
+            action += 1
         elif action == self.Actions.GRAB:
             if self.Board.GOLD in self.board[self.player["position"]]:
-                print("GRABBED GOLD!")
                 reward += self.Rewards.GRAB_GOLD
                 self.player["gold"] = True
                 self.board[self.player["position"]].remove(self.Board.GOLD)
@@ -117,7 +119,6 @@ class Wumpus(gym.Env):
             pass
         elif action == self.Actions.CLIMB:
             if self.Board.EXIT in self.board[self.player["position"]]:
-                print("EXITED CAVE!")
                 reward += self.Rewards.EXIT_GOLD if self.player["gold"] else self.Rewards.EXIT
                 done = True
 
@@ -210,11 +211,11 @@ class Wumpus(gym.Env):
 
     def _generate(self):
         self.board = [{0} for _ in range(self.h * self.w)]
-        # for i in range(len(self.board)):
-        #     if random.uniform(0, 1) < 0.2:
-        #         self.board[i].add(self.Board.PIT)
-        #         for j in range(4):
-        #             self._move_forward(i, j, self.Board.BREEZE)
+        for i in range(len(self.board)):
+            if random.uniform(0, 1) < 0.2:
+                self.board[i].add(self.Board.PIT)
+                for j in range(4):
+                    self._move_forward(i, j, self.Board.BREEZE)
                     
         # Place the gold at a random spot
         self._random_empty_place(self.Board.GOLD)
