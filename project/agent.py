@@ -37,7 +37,7 @@ class DQNAgent:
         state_shape  = self.env.observation_space.__len__()
         model.add(Dense(24, input_dim=state_shape, activation="relu"))
         model.add(Dense(24, activation="relu"))
-        model.add(Dense(self.env.action_space.n, activation="linear"))
+        model.add(Dense(self.env.action_space.n))
         model.compile(loss=Huber(), optimizer=Adam(lr=self.learning_rate))
         return model
 
