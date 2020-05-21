@@ -1,36 +1,36 @@
-import gym
-import sys
-import random
+import matplotlib.pyplot as plt
 import numpy as np
 import os
+import random
 from collections import deque
 from keras.models import Sequential
 from keras import Input
 from keras.layers import Dense
 from keras.optimizers import Adam
-import matplotlib.pyplot as plt
-from wumpus import Wumpus
-
-
 # https://towardsdatascience.com/reinforcement-learning-w-keras-openai-dqns-1eed3a5338c
-class DQN:
-    def __init__(self, env):
+class DQNAgent:
+    def __init__(self, env, run):
+        self.run = run
         self.history = []
         self.env     = env
         self.memory  = deque(maxlen=10000)
         
         self.gamma = 0.9
-        self.epsilon = 1.0
-        self.epsilon_min = 0.001
-        self.epsilon_decay = 0.999
-        self.learning_rate = 0.05
-        self.tau = 0.125
-        self.batch_size = 15
+        if run:
+            self.epsilon = 1.0
+            self.epsilon_min = 0.0001
+        else:
+            self.epsilon = 0.0
+            self.epsilon_min = 0.0
+        self.epsilon_decay = 0.9992
+        self.learning_rate = 0.001
+        self.tau = 1
+        self.batch_size = 30
 
-        self.model        = self.create_model()
-        self.target_model = self.create_model()
+        self.model        = self._create_model()
+        self.target_model = self._create_model()
 
-    def create_model(self):
+    def _create_model(self):
         model   = Sequential()
         state_shape  = self.env.observation_space.__len__()
         model.add(Dense(24, input_dim=state_shape, activation="relu"))
@@ -53,7 +53,7 @@ class DQN:
         self.memory.append([state, action, reward, new_state, done])
 
     def replay(self):
-        if len(self.memory) < self.batch_size: 
+        if len(self.memory) < self.batch_size or self.run: 
             return
 
         samples = random.sample(self.memory, self.batch_size)
@@ -67,6 +67,7 @@ class DQN:
                 target[0][action] = reward + Q_future * self.gamma
             history = self.model.fit(state, target, epochs=1, verbose=0)
             self.history.append(history.history['loss'][0])
+        self.target_train()
 
     def target_train(self):
         weights = self.model.get_weights()
@@ -77,19 +78,10 @@ class DQN:
 
     def graph(self):
         plt.plot(self.history)
-        # plt.plot(self.history.history['val_accuracy'])
         plt.title('model loss')
         plt.ylabel('loss')
         plt.xlabel('epoch')
-        plt.legend(['loss'], loc='upper left')
         plt.show()
-        # plt.plot(self.history.history['loss'], label='MAE (testing data)')
-        # plt.plot(self.history.history['val_loss'], label='MAE (validation data)')
-        # plt.title('MAE for Chennai Reservoir Levels')
-        # plt.ylabel('MAE value')
-        # plt.xlabel('No. epoch')
-        # plt.legend(loc="upper left")
-        # plt.show()
         
     def load(self, path):
         if os.path.exists(path):
@@ -101,49 +93,24 @@ class DQN:
     def save(self, path):
         self.target_model.save_weights(path)
 
+class BayesAgent:
+    def __init__(self, env):
+        self.env = env
+        self.frontier = [] 
+        self.explored = []
+        self.state = []
 
-EPISODES = 100
-EPISODE_LENGTH = 300
-def train():
-    env = Wumpus() 
-    observation_space = env.observation_space.__len__()
-    action_space = env.action_space.n
-    dqn_solver = DQN(env)
-    dqn_solver.load("model3.h5")
-    run = 0
-    print("Running", EPISODES, "episodes")
-    for _ in range(EPISODES):
-        run += 1
-        state = env.reset()
-        state = np.reshape(state, [1, observation_space])
-        score = 0
-        step = 0
-        action_count = [0] * env.action_space.n
-        while True:
-            step += 1
-            # print("Step:",step)
-            # sys.stdout.write("\033[F")
-            # env.render()
-            action = dqn_solver.act(state)
-            action_count[action] += 1
-            state_next, reward, terminal, info = env.step(action)
-            if step > EPISODE_LENGTH:
-               reward -= 2000
-            score += reward
+    def act(self, state):
+        self.state = state
+        print(self.state)
+        return env.action_space.sample()
 
-            state_next = np.reshape(state_next, [1, observation_space])
-            dqn_solver.remember(state, action, reward, state_next, terminal)
-            state = state_next
+    def remember(self, state, action, reward, new_state, done):
+        pass
 
-            dqn_solver.replay()
-            dqn_solver.target_train()
+    def replay(self):
+        pass
 
-            if terminal or step > EPISODE_LENGTH:
-                print("Run: " + str(run) + ", exploration: " + str(dqn_solver.epsilon) + ", score: " + str(score) + " : " + str(action_count))
-                break
-        dqn_solver.save('model.h5')
-    dqn_solver.graph()
+    def _move_to(self, position):
+        pass
 
-
-if __name__ == "__main__":
-    train()
