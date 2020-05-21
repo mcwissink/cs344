@@ -33,7 +33,7 @@ def train():
         while True:
             step += 1
             # print("Step:",step)
-            # env.render()
+            env.render()
             action = agent.act(state)
             action_count[action] += 1
             state_next, reward, terminal, info = env.step(action)

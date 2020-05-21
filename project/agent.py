@@ -7,6 +7,7 @@ from keras.models import Sequential
 from keras import Input
 from keras.layers import Dense
 from keras.optimizers import Adam
+from keras.losses import Huber
 # https://towardsdatascience.com/reinforcement-learning-w-keras-openai-dqns-1eed3a5338c
 class DQNAgent:
     def __init__(self, env, run):
@@ -15,31 +16,29 @@ class DQNAgent:
         self.env     = env
         self.memory  = deque(maxlen=10000)
         
-        self.gamma = 0.9
-        if run:
+        self.gamma = 0.95
+        if not run:
             self.epsilon = 1.0
             self.epsilon_min = 0.0001
         else:
             self.epsilon = 0.0
             self.epsilon_min = 0.0
-        self.epsilon_decay = 0.9992
-        self.learning_rate = 0.001
-        self.tau = 1
+        self.epsilon_decay = 0.999
+        self.learning_rate = 0.006
+        self.tau = 0.8
         self.batch_size = 30
 
         self.model        = self._create_model()
         self.target_model = self._create_model()
+        print(self.model.summary())
 
     def _create_model(self):
         model   = Sequential()
         state_shape  = self.env.observation_space.__len__()
         model.add(Dense(24, input_dim=state_shape, activation="relu"))
-        model.add(Dense(48, activation="relu"))
-        model.add(Dense(48, activation="relu"))
         model.add(Dense(24, activation="relu"))
-        model.add(Dense(self.env.action_space.n))
-        model.compile(loss="mean_squared_error", optimizer=Adam(lr=self.learning_rate))
-        print(model.summary())
+        model.add(Dense(self.env.action_space.n, activation="linear"))
+        model.compile(loss="mse", optimizer=Adam(lr=self.learning_rate))
         return model
 
     def act(self, state):
@@ -68,7 +67,6 @@ class DQNAgent:
             history = self.model.fit(state, target, epochs=1, verbose=0)
             self.history.append(history.history['loss'][0])
         self.target_train()
-
     def target_train(self):
         weights = self.model.get_weights()
         target_weights = self.target_model.get_weights()
@@ -88,7 +86,7 @@ class DQNAgent:
             self.model.load_weights(path)
             self.target_model.load_weights(path)
         else:
-            print("Failed to load weights:", path)
+            print("Found no existing weights:", path)
 
     def save(self, path):
         self.target_model.save_weights(path)

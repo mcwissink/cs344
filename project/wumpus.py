@@ -38,6 +38,8 @@ class Wumpus(gym.Env):
         EXIT_GOLD = 1000
         DEATH = -1000
         GRAB_GOLD = 500
+        KILL_WUMPUS = 100
+        SHOT_ARROW = -10
         
     def __init__(self, width=4, height=4):
         self.w = width
@@ -75,8 +77,6 @@ class Wumpus(gym.Env):
         if action == self.Actions.FORWARD:
             position, bump = self._move_forward(self.player["position"], self.player["direction"], self.Board.PLAYER)
             observations[3] = bump
-            # if not bump:
-            #     reward += 1
             self.player["position"] = position
         elif action == self.Actions.TURNLEFT:
             self.player["direction"] = self._turn_left(self.player["direction"])
@@ -89,7 +89,23 @@ class Wumpus(gym.Env):
                 self.player["gold"] = True
                 self.board[self.player["position"]].remove(self.Board.GOLD)
         elif action == self.Actions.SHOOT:
-            reward -= 20
+            reward += self.Rewards.SHOT_ARROW
+            hit_something = False
+            arrow_position = self.player["position"]
+            # Move the arrow forward until it hits wall or wumpus
+            while not hit_something:
+                position, bump = self._move_forward(arrow_position, self.player["direction"])
+                hit_something = bump
+                arrow_position = position
+                if self.Board.WUMPUS in self.board[arrow_position]:
+                    print("KILLED THE WUMPUS!")
+                    hit_something = True
+                    observations[4] = True
+                    # Remove the Wumpus and stench
+                    self.board[arrow_position].remove(self.Board.WUMPUS)
+                    for p in self._get_adjacent(arrow_position):
+                        self.board[p].remove(self.Board.STENCH)
+                    reward += self.Rewards.KILL_WUMPUS
             pass
         elif action == self.Actions.CLIMB:
             if self.Board.EXIT in self.board[self.player["position"]]:
@@ -100,8 +116,11 @@ class Wumpus(gym.Env):
         # Check if the player died
         position = self.board[self.player["position"]]
         if self.Board.PIT in position or self.Board.WUMPUS in position:
-            print("DIED!")
-            reward -= 1000
+            if self.Board.PIT in position:
+                print("FELL IN PIT!")
+            else:
+                print("EATEN BY WUMPUS!")
+            reward += self.Rewards.DEATH
             done = True
         observations = self._get_observations(observations)
 
@@ -115,7 +134,7 @@ class Wumpus(gym.Env):
     def reset(self):
         self.player = {
             "position": 0,
-            "direction": 0, # 0 = up, 1 = left, 2 = down, 3 = right
+            "direction": 0,
             "arrow": True,
             "gold": False,
         }
@@ -191,30 +210,39 @@ class Wumpus(gym.Env):
         return -1
                 
     def _get_adjacent(self, position):
-        adj = []
+        adjacent = []
         for direction in range(4):
             distance = self.h if direction % 2 == 0 else 1
             sign = -1 if direction < 2 else 1
             move_to = position + (distance * sign)
             if self._valid_move(position, move_to):
-                adj.append(move_to)
-        return adj
+                adjacent.append(move_to)
+        return adjacent
             
 
     def _generate(self):
         self.board = [{0} for _ in range(self.h * self.w)]
 
+        # Add the player and the exit
         start_position = 12
         self.board[start_position].add(self.Board.PLAYER)
         self.board[start_position].add(self.Board.EXIT)
         self.player["position"] = start_position
 
+        # Add the Wumpus
+        wumpus_position = self._random_empty_place()
+        self.board[wumpus_position].add(self.Board.WUMPUS)
+        for p in self._get_adjacent(wumpus_position):
+            self.board[p].add(self.Board.STENCH)
+
+        # Add the pits
         for i in range(len(self.board)):
             if random.uniform(0, 1) < 0.1:
+                # Only add a whole if it is empty
                 if (self._is_empty(i)):
                     self.board[i].add(self.Board.PIT)
-                    for j in range(4):
-                        self._move_forward(i, j, self.Board.BREEZE)
+                    for p in self._get_adjacent(i):
+                        self.board[p].add(self.Board.BREEZE)
                     
         # Place the gold at a random spot
         self._random_empty_place(self.Board.GOLD)
